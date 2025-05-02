@@ -1,9 +1,8 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 from core.utils import generate_unique_slug
 from .choices import STATE_CHOICES, COUNTRY_CHOICES
-from django.core.exceptions import ValidationError
-from django.contrib import messages
 # Create your models here.
 
 class Category(models.Model):
@@ -35,18 +34,18 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
 
-class Address(models.Model):
-    street_address = models.CharField(max_length=255, help_text="House No, Building, Street, Area")
-    locality = models.CharField(max_length=100, help_text="Locality, Town, Village")
-    city = models.CharField(max_length=100, help_text="City/District")
-    state = models.CharField(max_length=100, choices=STATE_CHOICES)
-    country = models.CharField(max_length=100, choices=COUNTRY_CHOICES, default="IN")
-    postal_code = models.CharField(max_length=20)
-    is_active = models.BooleanField(default=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+# class Address(models.Model):
+#     street_address = models.CharField(max_length=255, help_text="House No, Building, Street, Area")
+#     locality = models.CharField(max_length=100, help_text="Locality, Town, Village")
+#     city = models.CharField(max_length=100, help_text="City/District")
+#     state = models.CharField(max_length=100, choices=STATE_CHOICES)
+#     country = models.CharField(max_length=100, choices=COUNTRY_CHOICES, default="IN")
+#     postal_code = models.CharField(max_length=20)
+#     is_active = models.BooleanField(default=True)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     updated_at = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
-        return self.street_address    
+#     def __str__(self):
+#         return self.street_address 
 
 

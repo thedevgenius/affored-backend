@@ -12,7 +12,7 @@ class User(AbstractUser):
     phone = models.CharField('Phone Number', max_length=17, unique=True, error_messages={'unique': "A user with that phone number already exists.",})
 
     profile_image = models.ImageField(upload_to='user/avatar/', blank=True, null=True)
-    profile_color = models.CharField(max_length=7, default=generate_random_color(), blank=True, null=True)
+    profile_color = models.CharField(max_length=7, blank=True, null=True)
 
     USERNAME_FIELD = 'phone'
     REQUIRED_FIELDS = []

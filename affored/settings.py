@@ -127,6 +127,7 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static',
 ]
+
 # Media files (Uploaded files)
 # https://docs.djangoproject.com/en/5.2/ref/settings/#media-root
 

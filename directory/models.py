@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.exceptions import ValidationError
+import uuid
 
 from core.utils import generate_unique_slug
 from .choices import STATE_CHOICES, COUNTRY_CHOICES
@@ -34,18 +35,45 @@ class Category(models.Model):
         super().save(*args, **kwargs)
     
 
-# class Address(models.Model):
-#     street_address = models.CharField(max_length=255, help_text="House No, Building, Street, Area")
-#     locality = models.CharField(max_length=100, help_text="Locality, Town, Village")
-#     city = models.CharField(max_length=100, help_text="City/District")
-#     state = models.CharField(max_length=100, choices=STATE_CHOICES)
-#     country = models.CharField(max_length=100, choices=COUNTRY_CHOICES, default="IN")
-#     postal_code = models.CharField(max_length=20)
-#     is_active = models.BooleanField(default=True)
-#     created_at = models.DateTimeField(auto_now_add=True)
-#     updated_at = models.DateTimeField(auto_now=True)
+class Address(models.Model):
+    street_address = models.CharField(max_length=255, help_text="House No, Building, Street, Area")
+    locality = models.CharField(max_length=100, help_text="Locality, Town, Village")
+    city = models.CharField(max_length=100, help_text="City/District")
+    state = models.CharField(max_length=100, choices=STATE_CHOICES)
+    country = models.CharField(max_length=100, choices=COUNTRY_CHOICES, default="IN")
+    postal_code = models.CharField(max_length=20)
+    is_active = models.BooleanField(default=True)
+    lat = models.FloatField(null=True, blank=True)
+    lng = models.FloatField(null=True, blank=True)
 
-#     def __str__(self):
-#         return self.street_address 
+    def __str__(self):
+        return self.street_address
 
 
+class Business(models.Model):
+    id = models.UUIDField(default=uuid.uuid4, primary_key=True, editable=False)
+    name = models.CharField(max_length=250)
+    slug = models.SlugField(unique=True, editable=False, blank=True, null=True)
+    description = models.TextField(null=True, blank=True)
+    address = models.OneToOneField('Address', on_delete=models.SET_NULL, null=True, blank=True)
+    category = models.ManyToManyField('Category', blank=True)
+    geohash = models.CharField(max_length=20, null=True, blank=True)
+    is_active = models.BooleanField(default=True)
+
+
+    phone = models.CharField(max_length=15, null=True, blank=True)
+    email = models.EmailField(null=True, blank=True)
+    website = models.URLField(null=True, blank=True)
+
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = generate_unique_slug(self, 'name')
+            if self.address and self.address.locality:
+                locality = self.address.locality.lower()
+                self.slug = f'{base_slug}-{locality}'
+        return super().save(*args, **kwargs)
+    
+    def __str__(self):
+        return f'{self.name}-{self.slug}'
+    

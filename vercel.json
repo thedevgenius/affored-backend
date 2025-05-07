@@ -11,6 +11,5 @@
         "src": "/(.*)",
         "dest": "affored/wsgi.py"
     }
-    ],
-    "static": ["static"]
+    ]
 }

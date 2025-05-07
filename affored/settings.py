@@ -104,7 +104,7 @@ WSGI_APPLICATION = 'affored.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'afforedstg',
+        'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'jIilc0BKEAdISXqFuLCF',
         'HOST': 'afforedstg.crigec06q8pz.ap-south-1.rds.amazonaws.com',

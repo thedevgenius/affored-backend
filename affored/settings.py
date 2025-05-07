@@ -158,7 +158,7 @@ STATICFILES_DIRS = [
 ]
 
 # This is where Django will collect all static files to (admin, apps, etc.)
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Media files (Uploaded files)
 # https://docs.djangoproject.com/en/5.2/ref/settings/#media-root

@@ -1,15 +1,22 @@
 {
-    "builds": [
+  "builds": [
     {
-        "src": "affored/wsgi.py",
-        "use": "@vercel/python",
-        "config": { "maxLambdaSize": "15mb", "runtime": "python3.9" }
+      "src": "affored/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb",
+        "runtime": "python3.9"
+      }
     }
-    ],
-    "routes": [
+  ],
+  "routes": [
     {
-        "src": "/(.*)",
-        "dest": "affored/wsgi.py"
+      "src": "/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "affored/wsgi.py"
     }
-    ]
+  ]
 }

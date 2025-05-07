@@ -24,4 +24,4 @@ class CategoryListSerializer(serializers.ModelSerializer):
     children = ChildCategoryList(many=True, read_only=True)
     class Meta:
         model = Category
-        fields = ['name', 'slug', 'parent', 'children']
+        fields = ['id', 'name', 'slug', 'parent', 'children']

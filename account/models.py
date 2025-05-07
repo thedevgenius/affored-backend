@@ -24,3 +24,8 @@ class User(AbstractUser):
 
     def get_first_letter(self):
         return self.first_name[0].upper() if self.first_name else ''
+    
+    def save(self, *args, **kwargs):
+        if not self.profile_color:
+            self.profile_color = generate_random_color()
+        return super().save(*args, **kwargs)

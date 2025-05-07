@@ -1,11 +1,9 @@
 from django.contrib.auth.models import UserManager
 
 class CustomUserManager(UserManager):
-    def create_user(self, phone, password=None, **extra_fields):
-        if not phone:
-            raise ValueError("The Phone field must be set")
-        user = self.model(phone=phone, **extra_fields)
-        user.set_password(password)
+    def create_user(self, phone):
+        user = self.model(phone=phone)
+        user.set_unusable_password()  # No password used
         user.save(using=self._db)
         return user
 

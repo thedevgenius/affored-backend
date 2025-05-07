@@ -1,38 +1,80 @@
-from django.shortcuts import render
-from rest_framework import generics, permissions, status
-from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.core.cache import cache
+from django.utils import timezone
+from rest_framework_simplejwt.tokens import RefreshToken
+from .serializers import SendOTPSerializer, VerifyOTPSerializer
+from .models import User
+import random
 
-from django.contrib.auth import get_user_model
-from .serializers import UserSignUpSerializer, UserSignInSerializer
-# Create your views here.
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view, permission_classes
 
-User = get_user_model()
+OTP_EXPIRY = 300  # 5 minutes
+OTP_RATE_LIMIT = 60  # 1 minute
 
-class UserSignUpView(APIView):
-    serializer_class = UserSignUpSerializer
+def generate_otp():
+    return str(random.randint(100000, 999999))
 
-    def post(self, request, *args, **kwargs):
-        serializer = self.serializer_class(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return Response({"message": "User created successfully"}, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class UserSignInView(APIView):
-    serializer_class = UserSignInSerializer
-
+class SendOTPView(APIView):
     def post(self, request):
-        serializer = self.serializer_class(data=request.data, context={'request': request})
-        if serializer.is_valid():
-           user = serializer.validated_data.get('user')
-           return Response(
-               {
-                   'message': 'User signed in successfully',
-                   'user': {
-                       'phone': user.phone
-                   },
+        serializer = SendOTPSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        phone = serializer.validated_data['phone']
 
-                }, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        last_sent = cache.get(f"{phone}_last_sent")
+        now = timezone.now().timestamp()
+        if last_sent and now - last_sent < OTP_RATE_LIMIT:
+            return Response({"error": "OTP already sent. Please wait."}, status=429)
+
+        otp = generate_otp()
+        cache.set(f"otp_{phone}", otp, timeout=OTP_EXPIRY)
+        cache.set(f"{phone}_last_sent", now, timeout=OTP_RATE_LIMIT)
+
+        # Replace with real SMS gateway
+        print(f"Sending OTP {otp} to {phone}")
+
+        return Response({"message": "OTP sent successfully."}, status=200)
+
+class VerifyOTPView(APIView):
+    def post(self, request):
+        serializer = VerifyOTPSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        phone = serializer.validated_data['phone']
+        otp = serializer.validated_data['otp']
+
+        cached_otp = cache.get(f"otp_{phone}")
+        if cached_otp != otp:
+            return Response({"error": "Invalid or expired OTP."}, status=400)
+
+        user, created = User.objects.get_or_create(phone=phone)
+        refresh = RefreshToken.for_user(user)
+
+        cache.delete(f"otp_{phone}")  # clean up
+
+        response = Response({
+            "message": "Login successful.",
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+        }, status=200)
+
+        response.set_cookie(
+            key='access',
+            value=str(refresh.access_token),
+            httponly=True,       # 👈 So JavaScript can't read it
+            secure=True,         # 👈 Only over HTTPS in production
+            samesite='Lax',      # 👈 Or 'Strict' or 'None' as needed
+            max_age=3600,
+        )
+        return response
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_user_data(request):
+    user = request.user
+    return Response({
+        'phone': user.phone,  # Assuming user has a 'phone' field
+        # Add other user fields as needed
+    })

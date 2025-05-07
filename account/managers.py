@@ -1,9 +1,12 @@
 from django.contrib.auth.models import UserManager
 
 class CustomUserManager(UserManager):
-    def create_user(self, phone):
-        user = self.model(phone=phone)
-        user.set_unusable_password()  # No password used
+    def create_user(self, phone, password=None, **extra_fields):
+        user = self.model(phone=phone, **extra_fields)
+        if password:
+            user.set_password(password)
+        else:
+            user.set_unusable_password()
         user.save(using=self._db)
         return user
 

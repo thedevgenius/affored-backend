@@ -56,6 +56,7 @@ REST_FRAMEWORK = {
 }
 
 MIDDLEWARE = [
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -76,7 +77,7 @@ ROOT_URLCONF = 'affored.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR, 'templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -151,14 +152,14 @@ USE_TZ = True
 import os
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-# This is where your static files (e.g., admin, app-level) are collected from
+# Only if you're also using extra static files in your app directory
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',  # for files you create manually
+    os.path.join(BASE_DIR, 'static')
 ]
 
-# This is where Django will collect all static files to (admin, apps, etc.)
-STATIC_ROOT = BASE_DIR / "staticfiles"
+WHITENOISE_AUTOREFRESH = True
 
 # Media files (Uploaded files)
 # https://docs.djangoproject.com/en/5.2/ref/settings/#media-root

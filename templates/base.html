@@ -1,0 +1,811 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="h-full" data-theme="true" data-theme-mode="light" dir="ltr" lang="en">
+<head>
+    <base href="../">
+    <title>Affored</title>
+    <meta charset="utf-8">
+    <meta content="follow, index" name="robots">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="" name="description">
+    <link rel="shortcut icon" href="{% static 'media/app/favicon.ico' %}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+    <link rel="stylesheet" href="{% static 'vendors/apexcharts/apexcharts.css' %}">
+    <link rel="stylesheet" href="{% static 'vendors/keenicons/styles.bundle.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body
+    class="antialiased flex h-full text-base text-gray-700 [--tw-page-bg:#fefefe] [--tw-page-bg-dark:var(--tw-coal-500)] demo1 sidebar-fixed header-fixed bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]">
+    <!-- Theme Mode -->
+    <script>
+        const defaultThemeMode = 'light'; // light|dark|system
+        let themeMode;
+        if (document.documentElement) {
+            if (localStorage.getItem('theme')) {
+                themeMode = localStorage.getItem('theme');
+            } else if (document.documentElement.hasAttribute('data-theme-mode')) {
+                themeMode = document.documentElement.getAttribute('data-theme-mode');
+            } else {
+                themeMode = defaultThemeMode;
+            }
+            if (themeMode === 'system') {
+                themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.classList.add(themeMode);
+        }
+    </script>
+    <!-- End of Theme Mode -->
+    <!-- Page -->
+    <!-- Main -->
+    <div class="flex grow">
+        <!-- Sidebar -->
+        <div class="sidebar dark:bg-coal-600 bg-light border-e border-e-gray-200 dark:border-e-coal-100 fixed top-0 bottom-0 z-20 hidden lg:flex flex-col items-stretch shrink-0" data-drawer="true" data-drawer-class="drawer drawer-start top-0 bottom-0" data-drawer-enable="true|lg:false" id="sidebar">
+            <div class="sidebar-header hidden lg:flex items-center relative justify-between px-3 lg:px-6 shrink-0" id="sidebar_header">
+                <a class="dark:hidden" href="{% url 'home' %}">
+                    <img class="default-logo min-h-[22px] max-w-none" src="/static/media/app/default-logo.svg" />
+                    <img class="small-logo min-h-[22px] max-w-none" src="/static/media/app/mini-logo.svg" />
+                </a>
+                <a class="hidden dark:block" href="{% url 'home' %}">
+                    <img class="default-logo min-h-[22px] max-w-none" src="/static/media/app/default-logo-dark.svg" />
+                    <img class="small-logo min-h-[22px] max-w-none" src="/static/media/app/mini-logo.svg" />
+                </a>
+                <button class="btn btn-icon btn-icon-md size-[30px] rounded-lg border border-gray-200 dark:border-gray-300 bg-light text-gray-500 hover:text-gray-700 toggle absolute start-full top-2/4 -translate-x-2/4 -translate-y-2/4 rtl:translate-x-2/4" data-toggle="body" data-toggle-class="sidebar-collapse" id="sidebar_toggle">
+                    <i class="ki-filled ki-black-left-line toggle-active:rotate-180 transition-all duration-300 rtl:translate rtl:rotate-180 rtl:toggle-active:rotate-0"></i>
+                </button>
+            </div>
+            <div class="sidebar-content flex grow shrink-0 py-5 pe-2" id="sidebar_content">
+                <div class="scrollable-y-hover grow shrink-0 flex ps-2 lg:ps-5 pe-1 lg:pe-3" data-scrollable="true" data-scrollable-dependencies="#sidebar_header" data-scrollable-height="auto" data-scrollable-offset="0px" data-scrollable-wrappers="#sidebar_content" id="sidebar_scrollable">
+                    <!-- Sidebar Menu -->
+                    <div class="menu flex flex-col grow gap-0.5" data-menu="true" data-menu-accordion-expand-all="false" id="sidebar_menu">
+                        <div class="menu-item" data-menu-item-toggle="accordion" data-menu-item-trigger="click">
+                            <a href="#" class="menu-link flex items-center grow cursor-pointer border border-transparent gap-[10px] ps-[10px] pe-[10px] py-[6px]" tabindex="0">
+                                <span class="menu-icon items-start text-gray-500 dark:text-gray-400 w-[20px]"><i class="ki-filled ki-element-11 text-lg"></i></span>
+                                <span class="menu-title text-sm font-medium text-gray-800 menu-item-active:text-primary menu-link-hover:!text-primary">Dashboards</span>
+                            </a>
+                        </div>
+                        <div class="menu-item pt-2.25 pb-px">
+                            <span class="menu-heading uppercase text-2sm font-medium text-gray-500 ps-[10px] pe-[10px]">User</span>
+                        </div>
+                        <div class="menu-item" data-menu-item-toggle="accordion" data-menu-item-trigger="click">
+                            <div class="menu-link flex items-center grow cursor-pointer border border-transparent gap-[10px] ps-[10px] pe-[10px] py-[6px]"
+                                tabindex="0">
+                                <span class="menu-icon items-start text-gray-500 dark:text-gray-400 w-[20px]">
+                                    <i class="ki-filled ki-profile-circle text-lg">
+                                    </i>
+                                </span>
+                                <span
+                                    class="menu-title text-sm font-medium text-gray-800 menu-item-active:text-primary menu-link-hover:!text-primary">
+                                    Public Profile
+                                </span>
+                                <span class="menu-arrow text-gray-400 w-[20px] shrink-0 justify-end ms-1 me-[-10px]">
+                                    <i class="ki-filled ki-plus text-2xs menu-item-show:hidden"></i>
+                                    <i class="ki-filled ki-minus text-2xs hidden menu-item-show:inline-flex"></i>
+                                </span>
+                            </div>
+                            <div class="menu-accordion gap-0.5 ps-[10px] relative before:absolute before:start-[20px] before:top-0 before:bottom-0 before:border-s before:border-gray-200">
+                                <div class="menu-item" data-menu-item-toggle="accordion" data-menu-item-trigger="click">
+                                    <div class="menu-link border border-transparent grow cursor-pointer gap-[14px] ps-[10px] pe-[10px] py-[8px]" tabindex="0">
+                                        <span class="menu-bullet flex w-[6px] -start-[3px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary menu-item-hover:before:bg-primary">
+                                        </span>
+                                        <span class="menu-title text-2sm font-normal me-1 text-gray-800 menu-item-active:text-primary menu-item-active:font-medium menu-link-hover:!text-primary">
+                                            Projects
+                                        </span>
+                                        <span class="menu-arrow text-gray-400 w-[20px] shrink-0 justify-end ms-1 me-[-10px]">
+                                            <i class="ki-filled ki-plus text-2xs menu-item-show:hidden"></i>
+                                            <i class="ki-filled ki-minus text-2xs hidden menu-item-show:inline-flex"></i>
+                                        </span>
+                                    </div>
+                                    <div class="menu-accordion gap-0.5 relative before:absolute before:start-[32px] ps-[22px] before:top-0 before:bottom-0 before:border-s before:border-gray-200">
+                                        <div class="menu-item">
+                                            <a href="html/demo1/public-profile/projects/3-columns.html" class="menu-link border border-transparent items-center grow menu-item-active:bg-secondary-active dark:menu-item-active:bg-coal-300 dark:menu-item-active:border-gray-100 menu-item-active:rounded-lg hover:bg-secondary-active dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg gap-[5px] ps-[10px] pe-[10px] py-[8px]" tabindex="0">
+                                                <span class="menu-bullet flex w-[6px] -start-[3px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary menu-item-hover:before:bg-primary"></span>
+                                                <span class="menu-title text-2sm font-normal text-gray-800 menu-item-active:text-primary menu-item-active:font-semibold menu-link-hover:!text-primary">
+                                                    3 Columns
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="menu-item">
+                                            <a href="html/demo1/public-profile/projects/2-columns.html" class="menu-link border border-transparent items-center grow menu-item-active:bg-secondary-active dark:menu-item-active:bg-coal-300 dark:menu-item-active:border-gray-100 menu-item-active:rounded-lg hover:bg-secondary-active dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg gap-[5px] ps-[10px] pe-[10px] py-[8px]" tabindex="0">
+                                                <span class="menu-bullet flex w-[6px] -start-[3px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary menu-item-hover:before:bg-primary">
+                                                </span>
+                                                <span class="menu-title text-2sm font-normal text-gray-800 menu-item-active:text-primary menu-item-active:font-semibold menu-link-hover:!text-primary">
+                                                    2 Columns
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="menu-item">
+                                    <a href="html/demo1/public-profile/works.html" class="menu-link border border-transparent items-center grow menu-item-active:bg-secondary-active dark:menu-item-active:bg-coal-300 dark:menu-item-active:border-gray-100 menu-item-active:rounded-lg hover:bg-secondary-active dark:hover:bg-coal-300 dark:hover:border-gray-100 hover:rounded-lg gap-[14px] ps-[10px] pe-[10px] py-[8px]" tabindex="0">
+                                        <span class="menu-bullet flex w-[6px] -start-[3px] rtl:start-0 relative before:absolute before:top-0 before:size-[6px] before:rounded-full rtl:before:translate-x-1/2 before:-translate-y-1/2 menu-item-active:before:bg-primary menu-item-hover:before:bg-primary">
+                                        </span>
+                                        <span class="menu-title text-2sm font-normal text-gray-800 menu-item-active:text-primary menu-item-active:font-semibold menu-link-hover:!text-primary">
+                                            Works
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Sidebar Menu -->
+                </div>
+            </div>
+        </div>
+        <!-- End of Sidebar -->
+        <!-- Wrapper -->
+        <div class="wrapper flex grow flex-col">
+            <!-- Header -->
+            <header class="header fixed top-0 z-10 start-0 end-0 flex items-stretch shrink-0 bg-[--tw-page-bg] dark:bg-[--tw-page-bg-dark]" data-sticky="true" data-sticky-class="shadow-sm" data-sticky-name="header" id="header">
+                <!-- Container -->
+                <div class="container-fixed flex justify-end items-stretch lg:gap-4" id="header_container">
+                    <!-- Mobile Logo -->
+                    <div class="flex gap-1 lg:hidden items-center -ms-1">
+                        <a class="shrink-0" href="html/demo1.html">
+                            <img class="max-h-[25px] w-full" src="/static/media/app/mini-logo.svg" />
+                        </a>
+                        <div class="flex items-center">
+                            <button class="btn btn-icon btn-light btn-clear btn-sm" data-drawer-toggle="#sidebar">
+                                <i class="ki-filled ki-menu"></i>
+                            </button>
+                            <button class="btn btn-icon btn-light btn-clear btn-sm" data-drawer-toggle="#mega_menu_wrapper">
+                                <i class="ki-filled ki-burger-menu-2"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- End of Mobile Logo -->
+                    <!-- Topbar -->
+                    <div class="flex items-center gap-2 lg:gap-3.5">
+                        <div class="dropdown" data-dropdown="true" data-dropdown-offset="70px, 10px" data-dropdown-offset-rtl="-70px, 10px" data-dropdown-placement="bottom-end" data-dropdown-placement-rtl="bottom-start" data-dropdown-trigger="click|lg:click">
+                            <button class="dropdown-toggle btn btn-icon btn-icon-lg relative cursor-pointer size-9 rounded-full hover:bg-primary-light hover:text-primary dropdown-open:bg-primary-light dropdown-open:text-primary text-gray-500">
+                                <i class="ki-filled ki-notification-status"></i>
+                            </button>
+                            <div class="dropdown-content light:border-gray-300 w-full max-w-[460px]">
+                                <div class="flex items-center justify-between gap-2.5 text-sm text-gray-900 font-semibold px-5 py-2.5 border-b border-b-gray-200" id="notifications_header">Notifications
+                                    <button class="btn btn-sm btn-icon btn-light btn-clear shrink-0" data-dropdown-dismiss="true">
+                                        <i class="ki-filled ki-cross"></i>
+                                    </button>
+                                </div>
+                                <div class="grow" id="notifications_tab_all">
+                                    <div class="flex flex-col">
+                                        <div class="scrollable-y-auto" data-scrollable="true"
+                                            data-scrollable-dependencies="#header" data-scrollable-max-height="auto"
+                                            data-scrollable-offset="200px">
+                                            <div class="flex flex-col gap-5 pt-3 pb-4 divider-y divider-gray-200">
+                                                <div class="flex grow gap-2.5 px-5">
+                                                    <div class="relative shrink-0 mt-0.5">
+                                                        <img alt="" class="rounded-full size-8"
+                                                            src="/static/media/avatars/300-4.png" />
+                                                        <span
+                                                            class="size-1.5 badge badge-circle badge-success absolute top-7 end-0.5 ring-1 ring-light transform -translate-y-1/2">
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-3.5">
+                                                        <div class="flex flex-col gap-1">
+                                                            <div class="text-2sm font-medium">
+                                                                <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                    href="#">
+                                                                    Joe Lincoln
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    mentioned you in
+                                                                </span>
+                                                                <a class="hover:text-primary-active text-primary"
+                                                                    href="#">
+                                                                    Latest Trends
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    topic
+                                                                </span>
+                                                            </div>
+                                                            <span
+                                                                class="flex items-center text-2xs font-medium text-gray-500">
+                                                                18 mins ago
+                                                                <span
+                                                                    class="badge badge-circle bg-gray-500 size-1 mx-1.5">
+                                                                </span>
+                                                                Web Design 2024
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            class="card shadow-none flex flex-col gap-2.5 p-3.5 rounded-lg bg-light-active">
+                                                            <div class="text-2sm font-semibold text-gray-600 mb-px">
+                                                                <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                    href="#">
+                                                                    @Cody
+                                                                </a>
+                                                                <span class="text-gray-700 font-medium">
+                                                                    For an expert opinion, check out what Mike has to
+                                                                    say on this topic!
+                                                                </span>
+                                                            </div>
+                                                            <label class="input input-sm">
+                                                                <input placeholder="Reply" type="text" value="">
+                                                                <button class="btn btn-icon">
+                                                                    <i class="ki-filled ki-picture">
+                                                                    </i>
+                                                                </button>
+                                                                </input>
+                                                            </label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="border-b border-b-gray-200">
+                                                </div>
+                                                <div class="flex grow gap-2.5 px-5">
+                                                    <div class="relative shrink-0 mt-0.5">
+                                                        <img alt="" class="rounded-full size-8"
+                                                            src="/static/media/avatars/300-5.png" />
+                                                        <span
+                                                            class="size-1.5 badge badge-circle badge-success absolute top-7 end-0.5 ring-1 ring-light transform -translate-y-1/2">
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-3.5">
+                                                        <div class="flex flex-col gap-1">
+                                                            <div class="text-2sm font-medium mb-px">
+                                                                <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                    href="#">
+                                                                    Leslie Alexander
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    added new tags to
+                                                                </span>
+                                                                <a class="hover:text-primary-active text-primary"
+                                                                    href="#">
+                                                                    Web Redesign 2024
+                                                                </a>
+                                                            </div>
+                                                            <span
+                                                                class="flex items-center text-2xs font-medium text-gray-500">
+                                                                53 mins ago
+                                                                <span
+                                                                    class="badge badge-circle bg-gray-500 size-1 mx-1.5">
+                                                                </span>
+                                                                ACME
+                                                            </span>
+                                                        </div>
+                                                        <div class="flex flex-wrap gap-2.5">
+                                                            <span class="badge badge-sm badge-info badge-outline">
+                                                                Client-Request
+                                                            </span>
+                                                            <span class="badge badge-sm badge-warning badge-outline">
+                                                                Figma
+                                                            </span>
+                                                            <span class="badge badge-sm badge-light badge-outline">
+                                                                Redesign
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="border-b border-b-gray-200">
+                                                </div>
+                                                <div class="flex grow gap-2.5 px-5" id="notification_request_3">
+                                                    <div class="relative shrink-0 mt-0.5">
+                                                        <img alt="" class="rounded-full size-8"
+                                                            src="/static/media/avatars/300-27.png" />
+                                                        <span
+                                                            class="size-1.5 badge badge-circle bg-gray-400 absolute top-7 end-0.5 ring-1 ring-light transform -translate-y-1/2">
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-3.5">
+                                                        <div class="flex flex-col gap-1">
+                                                            <div class="text-2sm font-medium mb-px">
+                                                                <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                    href="#">
+                                                                    Guy Hawkins
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    requested access to
+                                                                </span>
+                                                                <a class="hover:text-primary-active text-primary"
+                                                                    href="#">
+                                                                    AirSpace
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    project
+                                                                </span>
+                                                            </div>
+                                                            <span
+                                                                class="flex items-center text-2xs font-medium text-gray-500">
+                                                                14 hours ago
+                                                                <span
+                                                                    class="badge badge-circle bg-gray-500 size-1 mx-1.5">
+                                                                </span>
+                                                                Dev Team
+                                                            </span>
+                                                        </div>
+                                                        <div class="flex flex-wrap gap-2.5">
+                                                            <button class="btn btn-light btn-sm"
+                                                                data-dismiss="#notification_request_3">
+                                                                Decline
+                                                            </button>
+                                                            <button class="btn btn-dark btn-sm"
+                                                                data-dismiss="#notification_request_3">
+                                                                Accept
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="border-b border-b-gray-200">
+                                                </div>
+                                                <div class="flex grow gap-2.5 px-5">
+                                                    <div class="relative shrink-0 mt-0.5">
+                                                        <img alt="" class="rounded-full size-8"
+                                                            src="/static/media/avatars/300-1.png" />
+                                                        <span
+                                                            class="size-1.5 badge badge-circle bg-gray-400 absolute top-7 end-0.5 ring-1 ring-light transform -translate-y-1/2">
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-3.5 grow">
+                                                        <div class="flex flex-col gap-1">
+                                                            <div class="text-2sm font-medium mb-px">
+                                                                <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                    href="#">
+                                                                    Jane Perez
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    invites you to review a file.
+                                                                </span>
+                                                            </div>
+                                                            <span
+                                                                class="flex items-center text-2xs font-medium text-gray-500">
+                                                                3 hours ago
+                                                                <span
+                                                                    class="badge badge-circle bg-gray-500 size-1 mx-1.5">
+                                                                </span>
+                                                                742kb
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            class="card shadow-none flex items-center flex-row gap-1.5 p-2.5 rounded-lg bg-light-active">
+                                                            <img class="h-5" src="/static/media/file-types/pdf.svg" />
+                                                            <a class="hover:text-primary-active font-medium text-gray-700 text-xs me-1"
+                                                                href="#">
+                                                                Launch_nov24.pptx
+                                                            </a>
+                                                            <span class="font-medium text-gray-500 text-2xs">
+                                                                Edited 39 mins ago
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="border-b border-b-gray-200">
+                                                </div>
+                                                <div class="flex grow gap-2.5 px-5">
+                                                    <div class="relative shrink-0 mt-0.5">
+                                                        <img alt="" class="rounded-full size-8"
+                                                            src="/static/media/avatars/300-11.png" />
+                                                        <span
+                                                            class="size-1.5 badge badge-circle badge-success absolute top-7 end-0.5 ring-1 ring-light transform -translate-y-1/2">
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-1">
+                                                        <div class="text-2sm font-medium mb-px">
+                                                            <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                href="#">
+                                                                Raymond Pawell
+                                                            </a>
+                                                            <span class="text-gray-700">
+                                                                posted a new article
+                                                            </span>
+                                                            <a class="hover:text-primary-active text-primary" href="#">
+                                                                2024 Roadmap
+                                                            </a>
+                                                        </div>
+                                                        <span
+                                                            class="flex items-center text-2xs font-medium text-gray-500">
+                                                            1 hour ago
+                                                            <span class="badge badge-circle bg-gray-500 size-1 mx-1.5">
+                                                            </span>
+                                                            Roadmap
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="border-b border-b-gray-200">
+                                                </div>
+                                                <div class="flex grow gap-2.5 px-5">
+                                                    <div class="relative shrink-0 mt-0.5">
+                                                        <img alt="" class="rounded-full size-8"
+                                                            src="/static/media/avatars/300-14.png" />
+                                                        <span
+                                                            class="size-1.5 badge badge-circle bg-gray-400 absolute top-7 end-0.5 ring-1 ring-light transform -translate-y-1/2">
+                                                        </span>
+                                                    </div>
+                                                    <div class="flex flex-col gap-3.5 grow">
+                                                        <div class="flex flex-col gap-1">
+                                                            <div class="text-2sm font-medium mb-px">
+                                                                <a class="hover:text-primary-active text-gray-900 font-semibold"
+                                                                    href="#">
+                                                                    Tyler Hero
+                                                                </a>
+                                                                <span class="text-gray-700">
+                                                                    wants to view your design project
+                                                                </span>
+                                                            </div>
+                                                            <span
+                                                                class="flex items-center text-2xs font-medium text-gray-500">
+                                                                3 day ago
+                                                                <span
+                                                                    class="badge badge-circle bg-gray-500 size-1 mx-1.5">
+                                                                </span>
+                                                                Metronic Launcher mockups
+                                                            </span>
+                                                        </div>
+                                                        <div
+                                                            class="card shadow-none flex items-center flex-row gap-1.5 p-2.5 rounded-lg bg-light-active">
+                                                            <div
+                                                                class="flex items-center justify-center w-[26px] h-[30px] shrink-0 bg-light rounded border border-gray-200">
+                                                                <img class="h-5"
+                                                                    src="/static/media/file-types/figma.svg" />
+                                                            </div>
+                                                            <a class="hover:text-primary-active font-medium text-gray-700 text-xs me-1"
+                                                                href="#">
+                                                                Launcher-UIkit.fig
+                                                            </a>
+                                                            <span class="font-medium text-gray-500 text-2xs">
+                                                                Edited 2 mins ago
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="border-b border-b-gray-200">
+                                        </div>
+                                        <div class="grid grid-cols-2 p-5 gap-2.5" id="notifications_all_footer">
+                                            <button class="btn btn-sm btn-light justify-center">
+                                                Archive all
+                                            </button>
+                                            <button class="btn btn-sm btn-light justify-center">
+                                                Mark all as read
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="menu" data-menu="true">
+                            <div class="menu-item" data-menu-item-offset="20px, 10px"
+                                data-menu-item-offset-rtl="-20px, 10px" data-menu-item-placement="bottom-end"
+                                data-menu-item-placement-rtl="bottom-start" data-menu-item-toggle="dropdown"
+                                data-menu-item-trigger="click|lg:click">
+                                <div class="menu-toggle btn btn-icon rounded-full">
+                                    <img alt="" class="size-9 rounded-full border-2 border-success shrink-0"
+                                        src="/static/media/avatars/300-2.png">
+                                    </img>
+                                </div>
+                                <div class="menu-dropdown menu-default light:border-gray-300 w-screen max-w-[250px]">
+                                    <div class="flex items-center justify-between px-5 py-1.5 gap-1.5">
+                                        <div class="flex items-center gap-2">
+                                            <img alt="" class="size-9 rounded-full border-2 border-success"
+                                                src="/static/media/avatars/300-2.png">
+                                            <div class="flex flex-col gap-1.5">
+                                                <span class="text-sm text-gray-800 font-semibold leading-none">
+                                                    Cody Fisher
+                                                </span>
+                                                <a class="text-xs text-gray-600 hover:text-primary font-medium leading-none"
+                                                    href="html/demo1/account/home/get-started.html">
+                                                    c.fisher@gmail.com
+                                                </a>
+                                            </div>
+                                            </img>
+                                        </div>
+                                        <span class="badge badge-xs badge-primary badge-outline">
+                                            Pro
+                                        </span>
+                                    </div>
+                                    <div class="menu-separator">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="menu-item">
+                                            <a class="menu-link" href="html/demo1/public-profile/profiles/default.html">
+                                                <span class="menu-icon">
+                                                    <i class="ki-filled ki-badge">
+                                                    </i>
+                                                </span>
+                                                <span class="menu-title">
+                                                    Public Profile
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="menu-item">
+                                            <a class="menu-link" href="html/demo1/account/home/user-profile.html">
+                                                <span class="menu-icon">
+                                                    <i class="ki-filled ki-profile-circle">
+                                                    </i>
+                                                </span>
+                                                <span class="menu-title">
+                                                    My Profile
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="menu-item" data-menu-item-offset="-50px, 0"
+                                            data-menu-item-placement="left-start"
+                                            data-menu-item-placement-rtl="right-start" data-menu-item-toggle="dropdown"
+                                            data-menu-item-trigger="click|lg:hover">
+                                            <div class="menu-link">
+                                                <span class="menu-icon">
+                                                    <i class="ki-filled ki-setting-2">
+                                                    </i>
+                                                </span>
+                                                <span class="menu-title">
+                                                    My Account
+                                                </span>
+                                                <span class="menu-arrow">
+                                                    <i class="ki-filled ki-right text-3xs rtl:transform rtl:rotate-180">
+                                                    </i>
+                                                </span>
+                                            </div>
+                                            <div
+                                                class="menu-dropdown menu-default light:border-gray-300 w-full max-w-[220px]">
+                                                <div class="menu-item">
+                                                    <a class="menu-link"
+                                                        href="html/demo1/account/home/get-started.html">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-coffee">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Get Started
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link"
+                                                        href="html/demo1/account/home/user-profile.html">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-some-files">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            My Profile
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link" href="#">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-icon">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Billing
+                                                        </span>
+                                                        <span class="menu-badge" data-tooltip="true"
+                                                            data-tooltip-placement="top">
+                                                            <i class="ki-filled ki-information-2 text-md text-gray-500">
+                                                            </i>
+                                                            <span class="tooltip" data-tooltip-content="true">
+                                                                Payment and subscription info
+                                                            </span>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link"
+                                                        href="html/demo1/account/security/overview.html">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-medal-star">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Security
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link" href="html/demo1/account/members/teams.html">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-setting">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Members & Roles
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link" href="html/demo1/account/integrations.html">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-switch">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Integrations
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-separator">
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link"
+                                                        href="html/demo1/account/security/overview.html">
+                                                        <span class="menu-icon">
+                                                            <i class="ki-filled ki-shield-tick">
+                                                            </i>
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Notifications
+                                                        </span>
+                                                        <label class="switch switch-sm">
+                                                            <input checked="" name="check" type="checkbox" value="1">
+                                                            </input>
+                                                        </label>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="menu-item">
+                                            <a class="menu-link" href="https://devs.keenthemes.com">
+                                                <span class="menu-icon">
+                                                    <i class="ki-filled ki-message-programming">
+                                                    </i>
+                                                </span>
+                                                <span class="menu-title">
+                                                    Dev Forum
+                                                </span>
+                                            </a>
+                                        </div>
+                                        <div class="menu-item" data-menu-item-offset="-10px, 0"
+                                            data-menu-item-placement="left-start" data-menu-item-toggle="dropdown"
+                                            data-menu-item-trigger="click|lg:hover">
+                                            <div class="menu-link">
+                                                <span class="menu-icon">
+                                                    <i class="ki-filled ki-icon">
+                                                    </i>
+                                                </span>
+                                                <span class="menu-title">
+                                                    Language
+                                                </span>
+                                                <div
+                                                    class="flex items-center gap-1.5 rounded-md border border-gray-300 text-gray-600 p-1.5 text-2xs font-medium shrink-0">
+                                                    English
+                                                    <img alt="" class="inline-block size-3.5 rounded-full"
+                                                        src="/static/media/flags/united-states.svg" />
+                                                </div>
+                                            </div>
+                                            <div
+                                                class="menu-dropdown menu-default light:border-gray-300 w-full max-w-[170px]">
+                                                <div class="menu-item active">
+                                                    <a class="menu-link h-10" href="?dir=ltr">
+                                                        <span class="menu-icon">
+                                                            <img alt="" class="inline-block size-4 rounded-full"
+                                                                src="/static/media/flags/united-states.svg" />
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            English
+                                                        </span>
+                                                        <span class="menu-badge">
+                                                            <i class="ki-solid ki-check-circle text-success text-base">
+                                                            </i>
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link h-10" href="?dir=rtl">
+                                                        <span class="menu-icon">
+                                                            <img alt="" class="inline-block size-4 rounded-full"
+                                                                src="/static/media/flags/saudi-arabia.svg" />
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Arabic(Saudi)
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link h-10" href="?dir=ltr">
+                                                        <span class="menu-icon">
+                                                            <img alt="" class="inline-block size-4 rounded-full"
+                                                                src="/static/media/flags/spain.svg" />
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Spanish
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link h-10" href="?dir=ltr">
+                                                        <span class="menu-icon">
+                                                            <img alt="" class="inline-block size-4 rounded-full"
+                                                                src="/static/media/flags/germany.svg" />
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            German
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                                <div class="menu-item">
+                                                    <a class="menu-link h-10" href="?dir=ltr">
+                                                        <span class="menu-icon">
+                                                            <img alt="" class="inline-block size-4 rounded-full"
+                                                                src="/static/media/flags/japan.svg" />
+                                                        </span>
+                                                        <span class="menu-title">
+                                                            Japanese
+                                                        </span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="menu-separator">
+                                    </div>
+                                    <div class="flex flex-col">
+                                        <div class="menu-item mb-0.5">
+                                            <div class="menu-link">
+                                                <span class="menu-icon">
+                                                    <i class="ki-filled ki-moon">
+                                                    </i>
+                                                </span>
+                                                <span class="menu-title">
+                                                    Dark Mode
+                                                </span>
+                                                <label class="switch switch-sm">
+                                                    <input data-theme-state="dark" data-theme-toggle="true" name="check"
+                                                        type="checkbox" value="1">
+                                                    </input>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="menu-item px-4 py-1.5">
+                                            <a class="btn btn-sm btn-light justify-center"
+                                                href="html/demo1/authentication/classic/sign-in.html">
+                                                Log out
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- End of Topbar -->
+                </div>
+                <!-- End of Container -->
+            </header>
+            <!-- End of Header -->
+            <!-- Content -->
+            <main class="grow content pt-5" id="content" role="content">
+                <!-- Container -->
+                
+                {% block content %}
+                    
+                {% endblock content %}
+                    
+                <!-- End of Container -->
+            </main>
+            <!-- End of Content -->
+            
+            <!-- Footer -->
+            <footer class="footer">
+                <!-- Container -->
+                <div class="container-fixed">
+                    <div class="flex flex-col md:flex-row justify-center md:justify-between items-center gap-3 py-5">
+                        <div class="flex order-2 md:order-1 gap-2 font-normal text-2sm">
+                            <span class="text-gray-500">2025© </span>
+                            <a class="text-gray-600 hover:text-primary" href="#">Affored</a>
+                        </div>
+                        <nav class="flex order-1 md:order-2 gap-4 font-normal text-2sm text-gray-600">
+                            <a class="hover:text-primary" href="#"> Visit Site</a>
+                        </nav>
+                    </div>
+                </div>
+                <!-- End of Container -->
+            </footer>
+            <!-- End of Footer -->
+        </div>
+        <!-- End of Wrapper -->
+    </div>
+    <!-- End of Main -->
+
+
+    <!-- End of Page -->
+    <!-- Scripts -->
+    <script src="{% static 'js/core.bundle.js' %}"></script>
+    <script src="{% static 'vendors/apexcharts/apexcharts.min.js' %}"></script>
+    <script src="{% static 'js/widgets/general.js' %}"></script>
+    <script src="{% static 'js/layouts/demo1.js' %}"></script>
+    <!-- End of Scripts -->
+</body>
+
+</html>

@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'core',
     'account',
     'directory',
+    'location',
 ]
 
 AUTH_USER_MODEL = 'account.User'
@@ -69,7 +70,7 @@ MIDDLEWARE = [
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    # 'http://localhost:3000',  # Your Next.js frontend
+    'http://localhost:3000',  # Your Next.js frontend
     'https://affored-frontend.vercel.app', 
 ]
 

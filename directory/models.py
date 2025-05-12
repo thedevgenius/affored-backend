@@ -48,6 +48,10 @@ class Address(models.Model):
 
     def __str__(self):
         return self.street_address
+    
+    class Meta:
+        verbose_name = "Address"
+        verbose_name_plural = "Addresses"
 
 
 class Business(models.Model):
@@ -64,6 +68,10 @@ class Business(models.Model):
     phone = models.CharField(max_length=15, null=True, blank=True)
     email = models.EmailField(null=True, blank=True)
     website = models.URLField(null=True, blank=True)
+
+    class Meta:
+        verbose_name = "Business"
+        verbose_name_plural = "Businesses"
 
 
     def save(self, *args, **kwargs):

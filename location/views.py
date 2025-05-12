@@ -1,56 +1,48 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-import pygeohash as pgh
-import geohash2
-from geopy.geocoders import Nominatim
+import requests
 
-# Create your views here.
-def get_geohashes_within_radius(center_lat, center_lon, radius_meters=1000, precision=7):
-    """
-    Generate geohashes in a square bounding box of radius_meters around the center point.
-    """
-    geohash_set = set()
-    lat_step = 0.0015  # ~150m for precision 7
-    lon_step = 0.0015
-    lat_range = int(radius_meters / 150)
-    lon_range = int(radius_meters / 150)
 
-    for i in range(-lat_range, lat_range + 1):
-        for j in range(-lon_range, lon_range + 1):
-            new_lat = center_lat + i * lat_step
-            new_lon = center_lon + j * lon_step
-            geoh = geohash2.encode(new_lat, new_lon, precision=precision)
-            geohash_set.add(geoh)
+import requests
 
-    return list(geohash_set)
+def get_localities_from_pincode(pincode, api_key):
+    url = (
+        f"https://maps.googleapis.com/maps/api/geocode/json"
+        f"?address={pincode}&components=country:IN&key={api_key}"
+    )
+    
+    response = requests.get(url)
+    
+    if response.status_code == 200:
+        data = response.json()
+        localities = set()
+        for result in data.get("results", []):
+            for comp in result.get("address_components", []):
+                if "locality" in comp["types"] or "sublocality" in comp["types"]:
+                    localities.add(comp["long_name"])
+        return list(localities)
+    else:
+        return f"Error: {response.status_code} - {response.text}"
 
-def geohash_to_address(geoh, geolocator):
-    lat, lon = geohash2.decode(geoh)
-    try:
-        location = geolocator.reverse((lat, lon), exactly_one=True, language='en')
-        return location.address if location else "Address not found"
-    except:
-        return "Error fetching address"
+# Example usage:
+api_key = "AIzaSyC3mNT02ooGBr5NcWGUMb-cyNpVMJWG-Uc"  # Replace with your Google Maps API key
+pincode = "700029"
+print(get_localities_from_pincode(pincode, api_key))
 
-def print_addresses_from_pincode(pincode):
-    geolocator = Nominatim(user_agent="geoapi")
 
-    # Step 1: Get lat/lon of PIN code
-    location = geolocator.geocode(pincode)
-    if not location:
-        print("Could not find coordinates for this PIN code.")
-        return
 
-    center_lat, center_lon = location.latitude, location.longitude
 
-    # Step 2: Generate geohash codes around the PIN
-    geohashes = get_geohashes_within_radius(center_lat, center_lon, radius_meters=1000)
 
-    # Step 3: Reverse geocode each geohash
-    for geoh in geohashes:
-        address = geohash_to_address(geoh, geolocator)
-        print(f"{geoh}: {address}")
+
 
 
 class LocationListView(TemplateView):
     template_name = 'location/location_list.html'
+    def post(self, *args, **kwargs):
+        pincode = self.request.POST.get('pincode')
+        localities = get_localities_from_pincode(pincode)
+        print(localities)
+        return render(self.request, self.template_name)
+        
+
+    

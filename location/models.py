@@ -1,7 +1,7 @@
 from django.db import models
 from directory.choices import STATE_CHOICES
 from core.utils import generate_unique_slug
-import pygeohash as pgh
+# import pygeohash as pgh
 
 # Create your models here.
 class Location(models.Model):
@@ -24,7 +24,7 @@ class Location(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        if not self.geohash:
-            self.geohash = pgh.encode(self.lat, self.long, precision=self.precision)
-        return super().save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     if not self.geohash:
+    #         self.geohash = pgh.encode(self.lat, self.long, precision=self.precision)
+    #     return super().save(*args, **kwargs)

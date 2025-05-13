@@ -1,9 +1,9 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.conf import settings
 import requests
 
-
-import requests
+api_key = settings.GOOGLE_MAP_API_KEY
 
 def get_localities_from_pincode(pincode, api_key):
     url = (
@@ -24,10 +24,6 @@ def get_localities_from_pincode(pincode, api_key):
     else:
         return f"Error: {response.status_code} - {response.text}"
 
-# Example usage:
-api_key = "AIzaSyC3mNT02ooGBr5NcWGUMb-cyNpVMJWG-Uc"  # Replace with your Google Maps API key
-pincode = "700029"
-print(get_localities_from_pincode(pincode, api_key))
 
 
 
@@ -40,8 +36,7 @@ class LocationListView(TemplateView):
     template_name = 'location/location_list.html'
     def post(self, *args, **kwargs):
         pincode = self.request.POST.get('pincode')
-        localities = get_localities_from_pincode(pincode)
-        print(localities)
+        
         return render(self.request, self.template_name)
         
 

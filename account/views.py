@@ -12,10 +12,10 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view, permission_classes
 
 OTP_EXPIRY = 300  # 5 minutes
-OTP_RATE_LIMIT = 60  # 1 minute
+OTP_RATE_LIMIT = 30  # 1 minute
 
 def generate_otp():
-    return str(random.randint(100000, 999999))
+    return str(random.randint(1000, 9999))
 
 class SendOTPView(APIView):
     def post(self, request):
@@ -35,6 +35,8 @@ class SendOTPView(APIView):
         # Replace with real SMS gateway
         print(f"Sending OTP {otp} to {phone}")
 
+        print(cache.get(f"otp_{phone}"))
+
         return Response({"message": "OTP sent successfully."}, status=200)
 
 class VerifyOTPView(APIView):
@@ -43,8 +45,10 @@ class VerifyOTPView(APIView):
         serializer.is_valid(raise_exception=True)
         phone = serializer.validated_data['phone']
         otp = serializer.validated_data['otp']
+        print(f"Verifying OTP {otp} for {phone}")
 
         cached_otp = cache.get(f"otp_{phone}")
+        print(f"Cached OTP: {cached_otp}")
         if cached_otp != otp:
             return Response({"error": "Invalid or expired OTP."}, status=400)
 

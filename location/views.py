@@ -3,26 +3,26 @@ from django.views.generic import TemplateView
 from django.conf import settings
 import requests
 
-api_key = settings.GOOGLE_MAP_API_KEY
+# api_key = settings.GOOGLE_MAP_API_KEY
 
-def get_localities_from_pincode(pincode, api_key):
-    url = (
-        f"https://maps.googleapis.com/maps/api/geocode/json"
-        f"?address={pincode}&components=country:IN&key={api_key}"
-    )
+# def get_localities_from_pincode(pincode, api_key):
+#     url = (
+#         f"https://maps.googleapis.com/maps/api/geocode/json"
+#         f"?address={pincode}&components=country:IN&key={api_key}"
+#     )
     
-    response = requests.get(url)
+#     response = requests.get(url)
     
-    if response.status_code == 200:
-        data = response.json()
-        localities = set()
-        for result in data.get("results", []):
-            for comp in result.get("address_components", []):
-                if "locality" in comp["types"] or "sublocality" in comp["types"]:
-                    localities.add(comp["long_name"])
-        return list(localities)
-    else:
-        return f"Error: {response.status_code} - {response.text}"
+#     if response.status_code == 200:
+#         data = response.json()
+#         localities = set()
+#         for result in data.get("results", []):
+#             for comp in result.get("address_components", []):
+#                 if "locality" in comp["types"] or "sublocality" in comp["types"]:
+#                     localities.add(comp["long_name"])
+#         return list(localities)
+#     else:
+#         return f"Error: {response.status_code} - {response.text}"
 
 
 

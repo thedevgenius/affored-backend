@@ -174,4 +174,4 @@ MEDIA_ROOT = BASE_DIR / 'uploads'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-GOOGLE_MAP_API_KEY = config('GOOGLE_MAP_API_KEY')
+# GOOGLE_MAP_API_KEY = config('GOOGLE_MAP_API_KEY')
